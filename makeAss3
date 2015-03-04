@@ -1,0 +1,2 @@
+#!/bin/bash
+gcc -g lz77.c -o lz77 -I. -L. -lpnm -lm
