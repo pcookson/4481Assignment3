@@ -16,6 +16,7 @@ void Encode_Using_LZ77(char *in_PGM_filename_Ptr, unsigned int searching_buffer_
     load_PGM_Image(&pgmImage, in_PGM_filename_Ptr);
     int index = 0;
     int iIndex;
+    int endPtrAdd;
     int indexBefore = 1;
     int width;
     int height;
@@ -36,20 +37,28 @@ void Encode_Using_LZ77(char *in_PGM_filename_Ptr, unsigned int searching_buffer_
         for(width = 0; width < pgmImage.width; width++)
         {
             searchBuffer[index] = pgmImage.image[height][width];
+
             index++;
         }
     }
 
     int i;
+
+    index = 0;
+
     while(encodeCont == 1 && endPtr < (pgmImage.width * pgmImage.height - 1))
     {
-        for(i = endPtr; i > startPtr; i--)
+        iIndex = endPtr;
+        for(i = endPtr-1; i >= startPtr; i--)
         {
+            endPtrAdd = 1;
+
             if(searchBuffer[i] == searchBuffer[endPtr])
             {
                 // printf("%d %d\n", searchBuffer[i], searchBuffer[endPtr]);
 
                 indexBefore = 1;
+                cont =1;
                 while(cont == 1)
                 {
                     if((searchBuffer[i + indexBefore] == searchBuffer[endPtr + indexBefore]) && i+indexBefore < endPtr)
@@ -63,31 +72,25 @@ void Encode_Using_LZ77(char *in_PGM_filename_Ptr, unsigned int searching_buffer_
                         {
                             index = indexBefore;
                             iIndex = i;
+                            //printf("%d %d\n", endPtr, iIndex);
+                            endPtrAdd = 2;
                         }
 
                         cont = 0;
                     }
                 }
-                if(indexBefore > index)
-                {
-                    index = indexBefore;
-                    iIndex = i;
-                }
-                misAllArr[indexArr] = searchBuffer[endPtr +1];
-                repArr[indexArr] = index;
-                offSetArr[indexArr] = endPtr - iIndex;
-                indexArr++;
-                endPtr = endPtr + 2;
-                index = 0;
 
-            misAllArr[indexArr] = searchBuffer[endPtr];
-            offSetArr[indexArr] = 0;
-            repArr[indexArr] = 0;
-            indexArr++;
-            endPtr++;
             }
+
         }
 
+        misAllArr[indexArr] = searchBuffer[endPtr + index];
+        repArr[indexArr] = index;
+        offSetArr[indexArr] = endPtr - iIndex;
+        indexArr++;
+        endPtr = endPtr + index + 1;
+        index = 0;
+        //special case at start of encoding
         if(endPtr == 0 && startPtr == 0)
         {
             misAllArr[indexArr] = searchBuffer[endPtr];
@@ -107,10 +110,9 @@ void Encode_Using_LZ77(char *in_PGM_filename_Ptr, unsigned int searching_buffer_
 
 
     int j;
-    for(j = 0; j < indexArr; j++)
-    {
-        printf("%d %d %d\n",offSetArr[j], repArr[j], misAllArr[j]);
-    }
+
+
+
     //place arrays and height and width into encoded file
 
     //free arrays
