@@ -1,0 +1,17 @@
+#!/bin/bash
+./lz77 encode 256 camera.raw.pgm camera256.comp
+./lz77 encode 1024 camera.raw.pgm camera1024.comp
+./lz77 encode 5120 camera.raw.pgm camera5120.comp
+
+./lz77 encode 256 boats.raw.pgm boats256.comp
+./lz77 encode 1024 boats.raw.pgm boats1024.comp
+./lz77 encode 5120 boats.raw.pgm boats5120.comp
+
+./lz77 decode camera256.comp camera256.pgm
+./lz77 decode camera1024.comp camera1024.pgm
+./lz77 decode camera5120.comp camera5120.pgm
+
+./lz77 decode boats256.comp boats256.pgm
+./lz77 decode boats1024.comp boats1024.pgm
+./lz77 decode boats5120.comp boats5120.pgm
+

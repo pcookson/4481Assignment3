@@ -124,6 +124,8 @@ void Encode_Using_LZ77(char *in_PGM_filename_Ptr, unsigned int searching_buffer_
     int *repArr = malloc((pgmImage.width * pgmImage.height) * sizeof(int));
     int *misAllArr = malloc((pgmImage.width * pgmImage.height) * sizeof(int));
 
+    int *offSetArrFreq = malloc((pgmImage.width * pgmImage.height) * sizeof(int));
+    int *repArrFreq = malloc((pgmImage.width * pgmImage.height) * sizeof(int));
     index = 0;
     for(height = 0; height < pgmImage.height; height++)
     {
@@ -224,10 +226,12 @@ void Encode_Using_LZ77(char *in_PGM_filename_Ptr, unsigned int searching_buffer_
     for(j=0; j<indexArr; j++)
     {
         fprintf(encodedFile, "%d\n", offSetArr[j]);
+        offSetArrFreq[offSetArr[j]] = offSetArrFreq[offSetArr[j]]+1;
     }
     for(j=0; j<indexArr; j++)
     {
         fprintf(encodedFile, "%d\n", repArr[j]);
+        repArrFreq[repArr[j]] = repArrFreq[repArr[j]]+ 1;
     }
     for(j=0; j<indexArr; j++)
     {
@@ -235,11 +239,41 @@ void Encode_Using_LZ77(char *in_PGM_filename_Ptr, unsigned int searching_buffer_
     }
     fclose(encodedFile);
 
+//
+//    char *offSetFileName;
+//    offSetFileName = strdup(compressed_filename_Ptr);
+//    strcat(offSetFileName, ".offSetFreq");
+//    FILE *offSetFrequency;
+//    offSetFrequency = fopen(offSetFileName, "w");
+//    for(j=0;j<searching_buffer_size; j++){
+//        fprintf(offSetFrequency, "%d\n", j);
+//    }
+//    for(j=0;j<searching_buffer_size; j++){
+//        fprintf(offSetFrequency, "%d\n", offSetArrFreq[j]);
+//    }
+//    fclose(offSetFrequency);
+//
+//    char *repFileName;
+//    repFileName = strdup(compressed_filename_Ptr);
+//    strcat(repFileName, ".repFreq");
+//    FILE *repFrequency;
+//    repFrequency = fopen(repFileName, "w");
+//    for(j=0;j<searching_buffer_size; j++){
+//        fprintf(repFrequency, "%d\n", j);
+//    }
+//    for(j=0;j<searching_buffer_size; j++){
+//        fprintf(repFrequency, "%d\n", repArrFreq[j]);
+//    }
+//    fclose(repFrequency);
+
+
     //free arrays
     free(searchBuffer);
     free(offSetArr);
     free(repArr);
     free(misAllArr);
+    free(offSetArrFreq);
+    free(repArrFreq);
 
 }
 
