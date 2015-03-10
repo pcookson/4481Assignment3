@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 #include "libpnm.h"
 
@@ -289,6 +290,9 @@ int main(int argc, char *argv[])
     char *function;
     char *pgmFilename;
     char *compressedFileName;
+    struct timeval timeBeforeStruct;
+    struct timeval timeAfterStruct;
+    long int total;
 
 
     function = strdup(argv[1]);
@@ -299,11 +303,15 @@ int main(int argc, char *argv[])
             perror("Invalid command line inputs");
             exit(1);
         }
-
+        gettimeofday(&timeBeforeStruct, NULL);
         bufferSize = atoi(argv[2]);
         pgmFilename = strdup(argv[3]);
         compressedFileName = strdup(argv[4]);
         Encode_Using_LZ77(pgmFilename, bufferSize, compressedFileName);
+        gettimeofday(&timeAfterStruct, NULL);
+        total = ((timeAfterStruct.tv_sec - timeBeforeStruct.tv_sec) * 1000000L + timeAfterStruct.tv_usec) - timeBeforeStruct.tv_usec;
+        printf("Encoding time for %s: %ld\n", compressedFileName, total);
+
     }
     else if(strcmp(function, "decode") == 0)
     {
@@ -312,9 +320,13 @@ int main(int argc, char *argv[])
             perror("Invalid command line inputs");
             exit(1);
         }
+        gettimeofday(&timeBeforeStruct, NULL);
         compressedFileName = strdup(argv[2]);
         pgmFilename = strdup(argv[3]);
         Decode_Using_LZ77(compressedFileName, pgmFilename);
+        gettimeofday(&timeAfterStruct, NULL);
+        total = ((timeAfterStruct.tv_sec - timeBeforeStruct.tv_sec) * 1000000L + timeAfterStruct.tv_usec) - timeBeforeStruct.tv_usec;
+        printf("Decoding time for %s: %ld\n", compressedFileName, total);
     }
 
 
