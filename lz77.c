@@ -220,24 +220,25 @@ void Encode_Using_LZ77(char *in_PGM_filename_Ptr, unsigned int searching_buffer_
     fprintf(encodedFile, "%d\n", pgmImage.height);
     fprintf(encodedFile, "%d\n", pgmImage.width);
     //print array length of three arrays
-    fprintf(encodedFile, "%d\n", indexArr);
+    fprintf(encodedFile, "%d\n", indexArr-1);
 
     //print arrays in order of offset, rep, mis
     int j;
-    for(j=0; j<indexArr; j++)
+    for(j=0; j<indexArr-1; j++)
     {
         fprintf(encodedFile, "%d\n", offSetArr[j]);
         offSetArrFreq[offSetArr[j]] = offSetArrFreq[offSetArr[j]]+1;
     }
-    for(j=0; j<indexArr; j++)
+    for(j=0; j<indexArr-1; j++)
     {
         fprintf(encodedFile, "%d\n", repArr[j]);
         repArrFreq[repArr[j]] = repArrFreq[repArr[j]]+ 1;
     }
-    for(j=0; j<indexArr; j++)
+    for(j=0; j<indexArr-1; j++)
     {
         fprintf(encodedFile, "%d\n", misAllArr[j]);
     }
+    
     fclose(encodedFile);
 
 //
